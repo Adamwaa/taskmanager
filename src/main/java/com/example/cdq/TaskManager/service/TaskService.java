@@ -4,6 +4,7 @@ import com.example.cdq.TaskManager.AsyncTaskProcessor;
 import com.example.cdq.TaskManager.repository.TaskRepository;
 import com.example.cdq.TaskManager.model.Task;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -28,10 +29,13 @@ public class TaskService {
         asyncprocessTaskAsync.processTaskAsync(newTask);
         return newTask;
     }
+
+    @Cacheable(value = "tasks", key = "#taskId")
     public Task getTask(String taskId) {
         return taskRepository.getTask(taskId);
     }
 
+    @Cacheable(value = "allTasks")
     public Collection<Task> getAllTasks() {
         return taskRepository.getAllTasks().values();
     }
